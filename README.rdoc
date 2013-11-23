@@ -29,6 +29,8 @@ API 通信をともなう重要な部分はモックを利用した単体・結�
 
 == Heroku でのデプロイ
 
+http://webpay-closet.herokuapp.com のようになります。
+
   heroku create webpay-closet
   g push heroku master
   heroku config:set WEBPAY_PUBLIC_KEY=$WEBPAY_PUBLIC_KEY WEBPAY_SECRET_KEY=$WEBPAY_SECRET_KEY # 上で設定した環境変数がのこっている場合

@@ -1,0 +1,13 @@
+<h1>ご購入履歴</h1>
+%table
+  %tr
+    %th アイテム
+    %th 金額
+    %th 日時
+    %th charge ID (admin 用)
+  - @sales.each do |sale|
+    %tr
+      %td= sale.item.name
+      %td= sale.item.price
+      %td= l(sale.created_at, format: :short)
+      %td= sale.webpay_charge_id

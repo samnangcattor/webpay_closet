@@ -1,6 +1,6 @@
 class Customers::RegistrationsController < Devise::RegistrationsController
   def create
-    customer = Customer.new(sign_up_params)
+    self.resource = customer = Customer.new(sign_up_params)
     if customer.save
       sign_up(:customer, customer)
       begin
@@ -21,7 +21,7 @@ class Customers::RegistrationsController < Devise::RegistrationsController
   end
 
   def update
-    customer = current_customer
+    self.resource = customer = current_customer
     if customer.update_with_password(account_update_params)
       set_flash_message :notice, :updated if is_flashing_format?
       sign_in :customer, customer, :bypass => true

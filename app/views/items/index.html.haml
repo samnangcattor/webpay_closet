@@ -1,0 +1,11 @@
+%table
+  %tr
+    %th アイテム名
+    %th 価格(GIL)
+    %th
+  - @items.each do |item|
+    %tr
+      %td= item.name
+      %td= item.price
+      %td
+        = link_to '購入', buy_item_path(item), method: :post, confirm: "#{item.name}を購入しますか"

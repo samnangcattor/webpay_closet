@@ -28,5 +28,25 @@ describe Customer do
         expect(Sale.last.webpay_charge_id).to eq charge_id
       end
     end
+
+    context 'when the transaction fails' do
+      before do
+        expect(WebPay::Charge).to receive(:create)
+          .with(customer: customer.webpay_customer_id, amount: item.price, currency: 'jpy')
+          .and_raise(WebPay::CardError.new(402, {
+              "type" => "card_error",
+              "message" => "This card cannot be used.",
+              "code" => "card_declined"
+            }))
+      end
+
+      it 'should not create a sale' do
+        expect { customer.buy(item) rescue nil }.not_to change(Sale, :count)
+      end
+
+      it 'should raise ChargeFailed error' do
+        expect { customer.buy(item) }.to raise_error(Customer::ChargeFailed, "This card cannot be used.")
+      end
+    end
   end
 end

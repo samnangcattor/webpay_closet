@@ -1,6 +1,13 @@
 class Customer < ActiveRecord::Base
   class NoWebPayAccountError < RuntimeError
   end
+  class ChargeFailed < RuntimeError
+    attr_reader :error
+    def initialize(error)
+      super(error.message)
+      @error = error
+    end
+  end
 
   devise :database_authenticatable, :registerable, :validatable
 
@@ -23,7 +30,11 @@ class Customer < ActiveRecord::Base
 
   def buy(item)
     raise NoWebPayAccountError.new if self.webpay_customer_id.blank?
-    charge = WebPay::Charge.create(customer: self.webpay_customer_id, amount: item.price, currency: Item::CURRENCY)
-    Sale.create(customer: self, item: item, webpay_charge_id: charge.id)
+    begin
+      charge = WebPay::Charge.create(customer: self.webpay_customer_id, amount: item.price, currency: Item::CURRENCY)
+      Sale.create(customer: self, item: item, webpay_charge_id: charge.id)
+    rescue WebPay::WebPayError => e
+      raise ChargeFailed.new(e)
+    end
   end
 end

@@ -11,6 +11,9 @@
   <p>
     <% if current_customer %>
       <%= current_customer.name %>さん、こんにちは
+      <%= link_to 'アイテム一覧', root_path %>
+      <%= link_to 'ご購入履歴', sales_path %>
+      <%= link_to 'アカウント設定', edit_customer_registration_path %>
       <%= link_to 'ログアウト', destroy_customer_session_path, method: :delete %>
     <% else %>
       <%= link_to 'ログイン', new_customer_session_path %>

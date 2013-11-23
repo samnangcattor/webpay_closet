@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   protected
   def configure_permitted_parameters
-    [:name, :address, 'webpay-token'].each do |param|
+    [:name, :address, :webpay_token].each do |param|
       devise_parameter_sanitizer.for(:sign_up) << param
       devise_parameter_sanitizer.for(:account_update) << param
     end

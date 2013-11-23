@@ -13,7 +13,7 @@ describe Customers::RegistrationsController do
         address: 'Tokyo-to'
       }}
 
-    it 'should create customer without webpay-token' do
+    it 'should create customer without webpay_token' do
       expect { post :create, customer: basic_params }.to change(Customer, :count).by(1)
       expect(Customer.last.webpay_customer_id).to eq nil
     end

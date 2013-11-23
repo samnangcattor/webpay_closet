@@ -8,6 +8,15 @@
 </head>
 <body>
 
+  <p>
+    <% if current_customer %>
+      <%= current_customer.name %>さん、こんにちは
+      <%= link_to 'ログアウト', destroy_customer_session_path, method: :delete %>
+    <% else %>
+      <%= link_to 'ログイン', new_customer_session_path %>
+    <% end %>
+  </p>
+
   <% if flash[:notice] %>
     <p><%= flash[:notice] %></p>
   <% end %>

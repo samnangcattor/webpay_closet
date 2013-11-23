@@ -1,4 +1,7 @@
 class Customer < ActiveRecord::Base
+  class NoWebPayAccountError < RuntimeError
+  end
+
   devise :database_authenticatable, :registerable, :validatable
 
   attr_accessor :webpay_token
@@ -16,5 +19,11 @@ class Customer < ActiveRecord::Base
       created = WebPay::Customer.create(card: webpay_token, email: self.email, description: self.name)
       update_attributes(webpay_customer_id: created.id)
     end
+  end
+
+  def buy(item)
+    raise NoWebPayAccountError.new if self.webpay_customer_id.blank?
+    charge = WebPay::Charge.create(customer: self.webpay_customer_id, amount: item.price, currency: Item::CURRENCY)
+    Sale.create(customer: self, item: item, webpay_charge_id: charge.id)
   end
 end

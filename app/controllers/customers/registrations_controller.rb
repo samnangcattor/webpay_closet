@@ -2,6 +2,7 @@ class Customers::RegistrationsController < Devise::RegistrationsController
   def create
     customer = Customer.new(sign_up_params)
     if customer.save
+      customer.update_webpay_customer_id
       set_flash_message :notice, :signed_up if is_flashing_format?
       sign_up(:customer, customer)
       respond_with customer, :location => after_sign_up_path_for(customer)

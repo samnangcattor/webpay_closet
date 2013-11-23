@@ -4,6 +4,13 @@ describe Customer do
     let(:customer) { Fabricate(:customer, webpay_customer_id: 'cus_XXXXXXXXX') }
     let(:item) { Fabricate(:item) }
 
+    context 'when the customer does not have an webpay account' do
+      before { customer.update!(webpay_customer_id: nil) }
+      it 'should raise NoWebPayAccountError' do
+        expect { customer.buy(item) }.to raise_error(Customer::NoWebPayAccountError)
+      end
+    end
+
     context 'when the transaction succeeds' do
       let(:charge_id) { 'ch_YYYYYYYYY' }
       before do

@@ -1,28 +1,38 @@
-== README
+== WebPay Closet
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+WebPay を Rails とともに使用するサンプルアプリケーションです。
 
-Things you may want to cover:
+API 通信をともなう重要な部分はモックを利用した単体・結合テストでカバーされているので、
+実際の API を利用せずに自動テストしながらアプリケーション開発する参考にもなります。
 
-* Ruby version
+== 利用方法
 
-* System dependencies
+* https://webpay.jp でご自分のアカウントを取得し、 https://webpay.jp/settings に記載されているテスト環境用の API キーを環境変数に設定してください。
 
-* Configuration
+    export WEBPAY_PUBLIC_KEY=test_public_XXXXXXXXXXXXXXXXXXXXXXXX
+    export WEBPAY_SECRET_KEY=test_secret_XXXXXXXXXXXXXXXXXXXXXXXX
 
-* Database creation
+* 次のコマンドを実行します
 
-* Database initialization
+    bundle install
+    bundle exec rake db:migrate
+    bundle exec rake db:seed
+    bundle exec rails s
 
-* How to run the test suite
+* http://localhost:3000 にアクセスします。
 
-* Services (job queues, cache servers, search engines, etc.)
+* http://localhost:3000/customers/sign_up からユーザ登録をします
 
-* Deployment instructions
+* 登録が済むとトップページにリダイレクトされるので、買い物をします
 
-* ...
+* 買い物の履歴は http://localhost:3000/sales で確認できます。
 
+== Heroku でのデプロイ
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+  heroku create webpay-closet
+  g push heroku master
+  heroku config:set WEBPAY_PUBLIC_KEY=$WEBPAY_PUBLIC_KEY WEBPAY_SECRET_KEY=$WEBPAY_SECRET_KEY # 上で設定した環境変数がのこっている場合
+  heroku run rake db:migrate
+  heroku run rake db:seed
+  heroku ps:scale web=1
+  heroku open

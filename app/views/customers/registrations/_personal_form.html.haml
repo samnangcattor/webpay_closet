@@ -7,6 +7,6 @@
   %br/
   = f.text_field :address
 %div
-  = f.label 'webpay_token', 'クレジットカード情報'
+  = f.label 'webpay_token', 'クレジットカード情報' + (resource.webpay_customer_id ? '(登録済)' : '')
   %br/
   %script{'src' => '/checkout.js', 'class' => 'webpay-button', 'data-key' => Rails.application.config.webpay_public_key, 'data-partial' => 'true', 'data-token-name' => 'customer[webpay_token]', 'data-previous-token' => resource.webpay_token || ''}

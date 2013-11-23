@@ -190,7 +190,7 @@
 
   WebPayCheckoutHelper = {
     initialize: function() {
-      var button, container, pubkey, status,
+      var button, container, pubkey, status, token,
         _this = this;
 
       this.script = document.querySelector('script.webpay-button');
@@ -228,6 +228,11 @@
       this.tokenBox = document.createElement('input');
       this.tokenBox.type = 'hidden';
       this.tokenBox.name = this.script.getAttribute('data-token-name') || 'webpay-token';
+      token = this.script.getAttribute('data-previous-token');
+      if (this.actAsPartial && (token != null) && token.indexOf('tok_') === 0) {
+        this.updateStatus();
+        this.tokenBox.value = token;
+      }
       container = document.createElement('div');
       container.id = 'WP_checkoutBox';
       if (this.actAsPartial) {

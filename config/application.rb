@@ -29,5 +29,8 @@ module WebpayCloset
       g.test_framework      :rspec, fixture: true
       g.fixture_replacement :fabrication
     end
+
+    config.webpay_public_key = ENV['WEBPAY_PUBLIC_KEY']
+    config.webpay_secret_key = ENV['WEBPAY_SECRET_KEY']
   end
 end

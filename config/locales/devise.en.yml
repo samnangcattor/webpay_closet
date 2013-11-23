@@ -43,6 +43,7 @@ en:
 
       customer:
         signed_up_but_webpay_error: "Welcome! You have signed up, but card information is not registered because %{message}. Please retry."
+        updated_but_webpay_error: "You updated your account, but card information is not registered because %{message}. Please retry."
 
     sessions:
       signed_in: "Signed in successfully."

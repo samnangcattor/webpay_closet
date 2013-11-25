@@ -1,13 +1,13 @@
 require 'spec_helper'
-describe Customer do
-  describe '#buy' do
+describe Item do
+  describe '#bought_by_customer' do
     let(:customer) { Fabricate(:customer, webpay_customer_id: 'cus_XXXXXXXXX') }
     let(:item) { Fabricate(:item) }
 
     context 'when the customer does not have an webpay account' do
       before { customer.update!(webpay_customer_id: nil) }
       it 'should raise NoWebPayAccountError' do
-        expect { customer.buy(item) }.to raise_error(Customer::NoWebPayAccountError)
+        expect { item.bought_by_customer(customer) }.to raise_error(Customer::NoWebPayAccountError)
       end
     end
 
@@ -20,11 +20,11 @@ describe Customer do
       end
 
       it 'should create a sale' do
-        expect { customer.buy(item) }.to change(Sale, :count).by(1)
+        expect { item.bought_by_customer(customer) }.to change(Sale, :count).by(1)
       end
 
       it 'should set sale.webpay_charge_id' do
-        customer.buy(item)
+        item.bought_by_customer(customer)
         expect(Sale.last.webpay_charge_id).to eq charge_id
       end
     end
@@ -41,12 +41,13 @@ describe Customer do
       end
 
       it 'should not create a sale' do
-        expect { customer.buy(item) rescue nil }.not_to change(Sale, :count)
+        expect { item.bought_by_customer(customer) rescue nil }.not_to change(Sale, :count)
       end
 
       it 'should raise ChargeFailed error' do
-        expect { customer.buy(item) }.to raise_error(Customer::ChargeFailed, "This card cannot be used.")
+        expect { item.bought_by_customer(customer) }.to raise_error(Item::ChargeFailed, "This card cannot be used.")
       end
     end
   end
+
 end

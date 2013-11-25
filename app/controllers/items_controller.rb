@@ -15,19 +15,15 @@ class ItemsController < ApplicationController
     item = Item.find(params[:id])
     if current_customer
       begin
-        current_customer.buy(item)
+        item.bought_by_customer(current_customer)
       rescue Customer::NoWebPayAccountError
         return redirect_to edit_customer_registration_path, notice: 'カード情報が未登録です'
-      rescue Customer::ChargeFailed => e
-        return redirect_to items_path, notice: "支払いできませんでした (#{e.message})"
       end
     else
-      begin
-        item.bought_by_guest(params['webpay-token'], params[:address], params[:name])
-      rescue Item::ChargeFailed => e
-        return redirect_to items_path, notice: "支払いできませんでした (#{e.message})"
-      end
+      item.bought_by_guest(params['webpay-token'], params[:address], params[:name])
     end
     redirect_to items_path, notice: "#{item.name}を購入しました"
+  rescue Item::ChargeFailed => e
+    redirect_to items_path, notice: "支払いできませんでした (#{e.message})"
   end
 end

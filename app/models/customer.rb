@@ -21,13 +21,7 @@ class Customer < ActiveRecord::Base
     end
   end
 
-  def buy(item)
-    raise NoWebPayAccountError.new if self.webpay_customer_id.blank?
-    begin
-      charge = WebPay::Charge.create(customer: self.webpay_customer_id, amount: item.price, currency: Item::CURRENCY)
-      Sale.create(customer: self, item: item, webpay_charge_id: charge.id)
-    rescue WebPay::WebPayError => e
-      raise ChargeFailed.new(e)
-    end
+  def webpay_customer_id_or_raise
+    self.webpay_customer_id.presence or raise NoWebPayAccountError.new
   end
 end

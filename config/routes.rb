@@ -2,6 +2,7 @@ WebpayCloset::Application.routes.draw do
   devise_for :customers, controllers: { registrations: 'customers/registrations' }
 
   resources :items, only: [:index] do
+    get 'payment', on: :member
     post 'buy', on: :member
   end
 

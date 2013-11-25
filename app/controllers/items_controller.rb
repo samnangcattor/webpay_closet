@@ -7,6 +7,11 @@ class ItemsController < ApplicationController
     @items = Item.all
   end
 
+  # GET /items/:id/payment
+  def payment
+    @item = Item.find(params[:id])
+  end
+
   # POST /items/:id/buy
   def buy
     item = Item.find(params[:id])

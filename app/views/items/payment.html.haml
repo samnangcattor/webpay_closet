@@ -1,0 +1,11 @@
+%h1= @item.name + 'を購入します'
+%p
+  住所、氏名は空欄でも利用できます。
+= form_tag buy_item_path(@item) do
+  = label_tag 'address'
+  = text_field_tag 'address'
+  %br
+  = label_tag 'name'
+  = text_field_tag 'name'
+  %br
+  %script{'src' => '/checkout.js', 'class' => 'webpay-button', 'data-key' => Rails.application.config.webpay_public_key, 'data-text' => 'カード情報を入力して購入'}

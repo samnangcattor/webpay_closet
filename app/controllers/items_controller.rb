@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 class ItemsController < ApplicationController
-  before_filter :authenticate_customer!, only: [:buy]
-
   # GET /items
   def index
     @items = Item.all
@@ -15,11 +13,21 @@ class ItemsController < ApplicationController
   # POST /items/:id/buy
   def buy
     item = Item.find(params[:id])
-    current_customer.buy(item)
+    if current_customer
+      begin
+        current_customer.buy(item)
+      rescue Customer::NoWebPayAccountError
+        return redirect_to edit_customer_registration_path, notice: 'カード情報が未登録です'
+      rescue Customer::ChargeFailed => e
+        return redirect_to items_path, notice: "支払いできませんでした (#{e.message})"
+      end
+    else
+      begin
+        item.bought_by_guest(params['webpay-token'], params[:address], params[:name])
+      rescue Item::ChargeFailed => e
+        return redirect_to items_path, notice: "支払いできませんでした (#{e.message})"
+      end
+    end
     redirect_to items_path, notice: "#{item.name}を購入しました"
-  rescue Customer::NoWebPayAccountError
-    redirect_to edit_customer_registration_path, notice: 'カード情報が未登録です'
-  rescue Customer::ChargeFailed => e
-    redirect_to items_path, notice: "支払いできませんでした (#{e.message})"
   end
 end

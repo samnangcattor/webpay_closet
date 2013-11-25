@@ -5,10 +5,10 @@ describe ItemsController do
   end
 
   describe '#buy' do
+    let(:item) { Fabricate(:item, price: 1293) }
+
     context 'customer is logged in' do
-      let(:price) { 1293 }
       let(:customer) { Fabricate(:customer, webpay_customer_id: 'cus_XXXXXXXXX') }
-      let(:item) { Fabricate(:item, price: price) }
       before { sign_in customer }
 
       it 'should buy the item with customer id' do
@@ -16,6 +16,17 @@ describe ItemsController do
           .with(customer: customer.webpay_customer_id, amount: item.price, currency: 'jpy')
           .and_return(WebPay::Charge.new('id' => 'ch_YYYYYYYYY', 'paid' => true))
         expect { post :buy, id: item.id }.to change(Sale, :count).by(1)
+      end
+    end
+
+    context 'customer is not logged in' do
+      let(:token) { 'tok_XXXXXXXXX' }
+      it 'should by the item with the token in request' do
+        expect(WebPay::Charge).to receive(:create)
+          .with(card: token, amount: item.price, currency: 'jpy', description: 'Tokyo-to Chiyoda-ku John Doe')
+          .and_return(WebPay::Charge.new('id' => 'ch_YYYYYYYYY', 'paid' => true))
+        expect { post :buy, id: item.id, address: 'Tokyo-to Chiyoda-ku',  name: 'John Doe', 'webpay-token' => token }.
+          not_to change(Sale, :count)
       end
     end
   end

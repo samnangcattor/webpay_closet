@@ -1,13 +1,6 @@
 class Customer < ActiveRecord::Base
   class NoWebPayAccountError < RuntimeError
   end
-  class ChargeFailed < RuntimeError
-    attr_reader :error
-    def initialize(error)
-      super(error.message)
-      @error = error
-    end
-  end
 
   devise :database_authenticatable, :registerable, :validatable
 

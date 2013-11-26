@@ -1,3 +1,4 @@
+アイテム購入のサンプルです。会員登録をするとワンクリックで購入、しないとクレジットカード番号と配達先を入力する画面に遷移します。
 %table
   %tr
     %th アイテム名
@@ -8,4 +9,7 @@
       %td= item.name
       %td= item.price
       %td
-        = link_to '購入', buy_item_path(item), method: :post, confirm: "#{item.name}を購入しますか"
+        - if current_customer
+          = link_to '購入', buy_item_path(item), method: :post, confirm: "#{item.name}を購入しますか"
+        - else
+          = link_to '登録せず購入', payment_item_path(item)

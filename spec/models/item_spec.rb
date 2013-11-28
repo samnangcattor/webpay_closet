@@ -12,11 +12,11 @@ describe Item do
     end
 
     context 'when the transaction succeeds' do
-      let(:charge_id) { 'ch_YYYYYYYYY' }
+      let(:expected_params) { { customer: customer.webpay_customer_id, amount: item.price, currency: 'jpy' } }
+      let(:dummy_charge) { charge_from(expected_params) }
+
       before do
-        expect(WebPay::Charge).to receive(:create)
-          .with(customer: customer.webpay_customer_id, amount: item.price, currency: 'jpy')
-          .and_return(WebPay::Charge.new('id' => charge_id, 'paid' => true))
+        expect(WebPay::Charge).to receive(:create).with(expected_params).and_return(dummy_charge)
       end
 
       it 'should create a sale' do
@@ -25,7 +25,7 @@ describe Item do
 
       it 'should set sale.webpay_charge_id' do
         item.bought_by_customer(customer)
-        expect(Sale.last.webpay_charge_id).to eq charge_id
+        expect(Sale.last.webpay_charge_id).to eq dummy_charge.id
       end
     end
 
@@ -33,11 +33,7 @@ describe Item do
       before do
         expect(WebPay::Charge).to receive(:create)
           .with(customer: customer.webpay_customer_id, amount: item.price, currency: 'jpy')
-          .and_raise(WebPay::CardError.new(402, {
-              "type" => "card_error",
-              "message" => "This card cannot be used.",
-              "code" => "card_declined"
-            }))
+          .and_raise(card_error)
       end
 
       it 'should not create a sale' do
@@ -49,5 +45,4 @@ describe Item do
       end
     end
   end
-
 end

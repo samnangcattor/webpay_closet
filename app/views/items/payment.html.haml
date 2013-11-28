@@ -8,4 +8,4 @@
   = label_tag 'name'
   = text_field_tag 'name'
   %br
-  %script{'src' => '/checkout.js', 'class' => 'webpay-button', 'data-key' => Rails.application.config.webpay_public_key, 'data-text' => 'カード情報を入力して購入'}
+  %script{'src' => 'https://checkout.webpay.jp/v1/', 'class' => 'webpay-button', 'data-key' => Rails.application.config.webpay_public_key, 'data-text' => 'カード情報を入力して購入'}

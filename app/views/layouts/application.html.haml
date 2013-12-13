@@ -15,7 +15,12 @@
       .navbar.navbar-default{role: "navigation"}
         .navbar-header
           = link_to 'WebPay Closet', root_path, class: 'navbar-brand'
-        .navbar-collapse.collapse
+          %button{ type: 'button', class: 'navbar-toggle', :'data-toggle' => 'collapse', :'data-target' => '#navbar-collapse' }
+            %span.sr-only Toggle nav
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+        .navbar-collapse.collapse#navbar-collapse
           %ul.nav.navbar-nav.navbar-right
             - if current_customer
               %li.navbar-text= current_customer.name + 'さん、こんにちは'

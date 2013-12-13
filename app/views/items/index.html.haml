@@ -1,5 +1,5 @@
 %p.lead アイテム購入のサンプルです。
-%p 会員登録をするとワンクリックで購入、しないとクレジットカード番号と配達先を入力する画面に遷移します。
+%p 会員登録をしているとワンクリックで購入、していない場合はクレジットカード番号と配達先を入力する画面に遷移します。
 %table.table.table-striped
   %tr
     %th アイテム名
@@ -11,6 +11,6 @@
       %td= item.price
       %td
         - if current_customer
-          = link_to '購入', buy_item_path(item), method: :post, confirm: "#{item.name}を購入しますか"
+          = link_to '購入', buy_item_path(item), method: :post, confirm: "#{item.name}を購入しますか", class: 'btn btn-xs btn-success btn-block'
         - else
-          = link_to '登録せず購入', payment_item_path(item)
+          = link_to '登録せず購入', payment_item_path(item), class: 'btn btn-xs btn-default btn-block'

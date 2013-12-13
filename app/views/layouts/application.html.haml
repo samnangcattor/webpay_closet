@@ -28,4 +28,6 @@
               %li= link_to '新規登録', new_customer_registration_path
       - if flash[:notice]
         .alert.alert-info= flash[:notice]
-      = yield
+      .row
+        .col-sm-6.col-sm-offset-3
+          = yield

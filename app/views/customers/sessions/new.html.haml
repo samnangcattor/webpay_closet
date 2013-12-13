@@ -1,7 +1,9 @@
-%h2 Sign in
-= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { role: 'form', class: 'form-inline' }) do |f|
+%h2 ログイン
+= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { role: 'form' }) do |f|
   %div.form-group
+    = f.label :email
     = f.email_field :email, autofocus: true, placeholder: 'Email', class: 'form-control'
   %div.form-group
+    = f.label :password
     = f.password_field :password, placeholder: 'Password', class: 'form-control'
-  = f.submit "Sign in", class: 'btn btn-default'
+  = f.submit 'ログイン', class: 'btn btn-lg btn-default pull-right'

@@ -4,23 +4,19 @@
   = devise_error_messages!
   %div.form-group
     = f.label :email
-    %br/
     = f.email_field :email, :autofocus => true, class: 'form-control'
   - if devise_mapping.confirmable? && resource.pending_reconfirmation?
     %div.help-block
       Currently waiting confirmation for: #{resource.unconfirmed_email}
   %div.form-group
     = f.label :password
-    %br/
     = f.password_field :password, :autocomplete => "off", class: 'form-control'
     .help-block leave blank if you don't want to change it
   %div.form-group
     = f.label :password_confirmation
-    %br/
     = f.password_field :password_confirmation, class: 'form-control'
   %div.form-group
     = f.label :current_password
-    %br/
     = f.password_field :current_password, class: 'form-control'
     .help-block we need your current password to confirm your changes
   = render partial: 'personal_form', locals: { f: f }

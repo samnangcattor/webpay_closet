@@ -1,0 +1,33 @@
+!!!
+%html{lang: "en"}
+  %head
+    %meta{charset: "utf-8"}
+    %meta{content: "IE=edge", "http-equiv" => "X-UA-Compatible"}
+    %meta{content: "width=device-width, initial-scale=1.0", name: "viewport"}
+    %meta{content: "WebPay Closet: Sample Application of WebPay API", name: "description"}
+    %meta{content: "WebPay", name: "author"}
+    %title WebPay Closet
+    = stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true
+    = javascript_include_tag "application", "data-turbolinks-track" => true
+    = csrf_meta_tags
+  %body
+    .container
+      .navbar.navbar-default{role: "navigation"}
+        .navbar-header
+          = link_to 'WebPay Closet', root_path, class: 'navbar-brand'
+        .navbar-collapse.collapse
+          %ul.nav.navbar-nav.navbar-right
+            - if current_customer
+              %li.navbar-text= current_customer.name + 'さん、こんにちは'
+              %li= link_to 'アイテム一覧', root_path
+              %li= link_to 'ご購入履歴', sales_path
+              %li= link_to 'アカウント設定', edit_customer_registration_path
+              %li= link_to 'ログアウト', destroy_customer_session_path, method: :delete
+            - else
+              %li= link_to 'ログイン', new_customer_session_path
+              %li= link_to '新規登録', new_customer_registration_path
+      - if flash[:notice]
+        .alert.alert-info= flash[:notice]
+      .row
+        .col-sm-6.col-sm-offset-3
+          = yield

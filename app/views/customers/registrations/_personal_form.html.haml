@@ -1,12 +1,9 @@
-%div
+%div.form-group
   = f.label :name
-  %br/
-  = f.text_field :name
-%div
+  = f.text_field :name, class: 'form-control'
+%div.form-group
   = f.label :address
-  %br/
-  = f.text_field :address
-%div
+  = f.text_field :address, class: 'form-control'
+%div.form-group
   = f.label 'webpay_token', 'クレジットカード情報' + (resource.webpay_customer_id ? '(登録済)' : '')
-  %br/
   %script{'src' => 'https://checkout.webpay.jp/v1/', 'class' => 'webpay-button', 'data-key' => Rails.application.config.webpay_public_key, 'data-partial' => 'true', 'data-token-name' => 'customer[webpay_token]', 'data-previous-token' => resource.webpay_token || ''}

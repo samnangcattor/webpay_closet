@@ -16,7 +16,9 @@ describe Item do
       let(:dummy_charge) { charge_from(expected_params) }
 
       before do
-        expect(WebPay::Charge).to receive(:create).with(expected_params).and_return(dummy_charge)
+        stub_request(:post, 'https://api.webpay.jp/v1/charges')
+          .with(expected_params)
+          .to_return(body: dummy_charge.to_json)
       end
 
       it 'should create a sale' do
@@ -25,15 +27,15 @@ describe Item do
 
       it 'should set sale.webpay_charge_id' do
         item.bought_by_customer(customer)
-        expect(Sale.last.webpay_charge_id).to eq dummy_charge.id
+        expect(Sale.last.webpay_charge_id).to eq dummy_charge['id']
       end
     end
 
     context 'when the transaction fails' do
       before do
-        expect(WebPay::Charge).to receive(:create)
+        stub_request(:post, 'https://api.webpay.jp/v1/charges')
           .with(customer: customer.webpay_customer_id, amount: item.price, currency: 'jpy')
-          .and_raise(card_error)
+          .to_return(card_error)
       end
 
       it 'should not create a sale' do

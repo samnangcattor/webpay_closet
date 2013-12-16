@@ -1,4 +1,12 @@
+module Util
+  def stringify_keys(hash)
+    Hash[hash.map { |k, v| [k.to_s, v] }]
+  end
+end
+
 module WebPayMock
+  include Util
+
   def customer_from(params, overrides = {})
     params = stringify_keys(params)
     builder = ResponseObjectBuilder.new('customer')
@@ -64,18 +72,18 @@ module WebPayMock
   end
 
   def card_error(attributes = {})
-    WebPay::CardError.new(402, {
-        "type" => "card_error",
-        "message" => "This card cannot be used.",
-        "code" => "card_declined"
-      }.merge(stringify_keys(attributes)))
-  end
-
-  def stringify_keys(hash)
-    Hash[hash.map { |k, v| [k.to_s, v] }]
+    {
+      status: 402,
+      body: { error: {
+          "type" => "card_error",
+          "message" => "This card cannot be used.",
+          "code" => "card_declined"
+        }.merge(stringify_keys(attributes)) }.to_json
+    }
   end
 
   class ResponseObjectBuilder
+    include Util
     PREFIX = {
       charge: 'ch',
       customer: 'cus',
@@ -110,7 +118,7 @@ module WebPayMock
     end
 
     def build
-      WebPay::ResponseConverter.new.convert(@hash)
+      stringify_keys(@hash)
     end
   end
 end

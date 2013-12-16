@@ -13,7 +13,9 @@ describe ItemsController do
 
       it 'should buy the item with customer id' do
         params = { customer: customer.webpay_customer_id, amount: item.price, currency: 'jpy' }
-        expect(WebPay::Charge).to receive(:create).with(params).and_return(charge_from(params))
+        stub_request(:post, 'https://api.webpay.jp/v1/charges')
+          .with(params)
+          .to_return(body: charge_from(params).to_json)
         expect { post :buy, id: item.id }.to change(Sale, :count).by(1)
       end
     end
@@ -22,7 +24,9 @@ describe ItemsController do
       let(:token) { 'tok_XXXXXXXXX' }
       it 'should by the item with the token in request' do
         params = { card: token, amount: item.price, currency: 'jpy', description: 'Tokyo-to Chiyoda-ku John Doe' }
-        expect(WebPay::Charge).to receive(:create).with(params).and_return(charge_from(params))
+        stub_request(:post, 'https://api.webpay.jp/v1/charges')
+          .with(params)
+          .to_return(body: charge_from(params).to_json)
         expect { post :buy, id: item.id, address: 'Tokyo-to Chiyoda-ku',  name: 'John Doe', 'webpay-token' => token }.
           not_to change(Sale, :count)
       end

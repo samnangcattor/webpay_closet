@@ -20,25 +20,20 @@ describe Customers::RegistrationsController do
 
     it 'should create customer with webpay_token' do
       token_id = 'tok_XXXXXXXXX'
-      customer_id = 'cus_YYYYYYYYY'
-      expect(WebPay::Customer).to receive(:create)
-        .with(card: token_id, email: basic_params[:email], description: basic_params[:name])
-        .and_return(WebPay::ResponseConverter.new.convert('id' =>  customer_id, 'object' => 'customer'))
+      params = { card: token_id, email: basic_params[:email], description: basic_params[:name] }
+      dummy_customer = customer_from(params)
+      stub_request(:post, 'https://api.webpay.jp/v1/customers').with(params).to_return(body: dummy_customer.to_json)
       expect { post :create, customer: basic_params.merge('webpay_token' => token_id) }.to change(Customer, :count).by(1)
-      expect(Customer.last.webpay_customer_id).to eq customer_id
+      expect(Customer.last.webpay_customer_id).to eq dummy_customer['id']
     end
 
     context 'if WebPay responds error' do
       let(:token_id) { 'tok_XXXXXXXXX' }
 
       before do
-        expect(WebPay::Customer).to receive(:create)
+        stub_request(:post, 'https://api.webpay.jp/v1/customers')
           .with(card: token_id, email: basic_params[:email], description: basic_params[:name])
-          .and_raise(WebPay::CardError.new(402, {
-              "type" => "card_error",
-              "message" => "This card cannot be used.",
-              "code" => "card_declined"
-            }))
+          .to_return(card_error)
       end
 
       def do_request
@@ -79,14 +74,13 @@ describe Customers::RegistrationsController do
 
       it 'should set webpay_customer_id of the customer' do
         token_id = 'tok_XXXXXXXXX'
-        customer_id = 'cus_YYYYYYYYY'
-        expect(WebPay::Customer).to receive(:create)
-          .with(card: token_id, email: new_email, description: customer.name)
-          .and_return(WebPay::ResponseConverter.new.convert('id' =>  customer_id, 'object' => 'customer'))
+        params = { card: token_id, email: new_email, description: customer.name }
+        dummy_customer = customer_from(params)
+        stub_request(:post, 'https://api.webpay.jp/v1/customers').with(params).to_return(body: dummy_customer.to_json)
         patch :update, customer: basic_params.merge(webpay_token: token_id)
         customer.reload
         expect(customer.email).to eq new_email
-        expect(customer.webpay_customer_id).to eq customer_id
+        expect(customer.webpay_customer_id).to eq dummy_customer['id']
       end
     end
 
@@ -94,14 +88,20 @@ describe Customers::RegistrationsController do
       let(:original_id) { 'cus_XXXXXXXXX' }
       before { customer.update_attributes!(webpay_customer_id: original_id) }
 
+      def stub_retrieve
+        stub_request(:get, 'https://api.webpay.jp/v1/customers/' + original_id)
+          .to_return(body: customer_from({}, id: original_id).to_json)
+      end
+
+      def stub_update(params)
+        stub_request(:post, 'https://api.webpay.jp/v1/customers/' + original_id)
+          .with(params)
+          .to_return(body: customer_from(params, id: original_id).to_json)
+      end
+
       it 'should update email field of WebPay customer model if no webpay_token' do
-        retrieved = double('WebPay::Customer', id: original_id)
-        expect(WebPay::Customer).to receive(:retrieve)
-          .with(original_id)
-          .and_return(retrieved)
-        expect(retrieved).to receive(:email=).with(new_email)
-        expect(retrieved).to receive(:description=).with(customer.name)
-        expect(retrieved).to receive(:save).and_return(retrieved)
+        stub_retrieve
+        stub_update(email: new_email, description: customer.name)
 
         patch :update, customer: basic_params
         customer.reload
@@ -111,14 +111,8 @@ describe Customers::RegistrationsController do
 
       it 'should update email and card field of WebPay customer model with webpay_token' do
         token_id = 'tok_XXXXXXXXX'
-        retrieved = double('WebPay::Customer', id: original_id)
-        expect(WebPay::Customer).to receive(:retrieve)
-          .with(original_id)
-          .and_return(retrieved)
-        expect(retrieved).to receive(:card=).with(token_id)
-        expect(retrieved).to receive(:email=).with(new_email)
-        expect(retrieved).to receive(:description=).with(customer.name)
-        expect(retrieved).to receive(:save).and_return(retrieved)
+        stub_retrieve
+        stub_update(card: token_id, email: new_email, description: customer.name)
 
         patch :update, customer: basic_params.merge(webpay_token: token_id)
         customer.reload
@@ -131,13 +125,9 @@ describe Customers::RegistrationsController do
       let(:token_id) { 'tok_XXXXXXXXX' }
 
       before do
-        expect(WebPay::Customer).to receive(:create)
+        stub_request(:post, 'https://api.webpay.jp/v1/customers')
           .with(card: token_id, email: new_email, description: customer.name)
-          .and_raise(WebPay::CardError.new(402, {
-              "type" => "card_error",
-              "message" => "This card cannot be used.",
-              "code" => "card_declined"
-            }))
+          .to_return(card_error)
       end
 
       def do_request

@@ -12,9 +12,10 @@ describe ItemsController do
       before { sign_in customer }
 
       it 'should buy the item with customer id' do
-        expect(WebPay::Charge).to receive(:create)
-          .with(customer: customer.webpay_customer_id, amount: item.price, currency: 'jpy')
-          .and_return(WebPay::Charge.new('id' => 'ch_YYYYYYYYY', 'paid' => true))
+        params = { customer: customer.webpay_customer_id, amount: item.price, currency: 'jpy' }
+        stub_request(:post, 'https://api.webpay.jp/v1/charges')
+          .with(params)
+          .to_return(body: charge_from(params).to_json)
         expect { post :buy, id: item.id }.to change(Sale, :count).by(1)
       end
     end
@@ -22,9 +23,10 @@ describe ItemsController do
     context 'customer is not logged in' do
       let(:token) { 'tok_XXXXXXXXX' }
       it 'should by the item with the token in request' do
-        expect(WebPay::Charge).to receive(:create)
-          .with(card: token, amount: item.price, currency: 'jpy', description: 'Tokyo-to Chiyoda-ku John Doe')
-          .and_return(WebPay::Charge.new('id' => 'ch_YYYYYYYYY', 'paid' => true))
+        params = { card: token, amount: item.price, currency: 'jpy', description: 'Tokyo-to Chiyoda-ku John Doe' }
+        stub_request(:post, 'https://api.webpay.jp/v1/charges')
+          .with(params)
+          .to_return(body: charge_from(params).to_json)
         expect { post :buy, id: item.id, address: 'Tokyo-to Chiyoda-ku',  name: 'John Doe', 'webpay-token' => token }.
           not_to change(Sale, :count)
       end

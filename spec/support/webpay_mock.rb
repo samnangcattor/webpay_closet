@@ -10,8 +10,8 @@ module WebPayMock
   def customer_from(params, overrides = {})
     params = stringify_keys(params)
     builder = ResponseObjectBuilder.new('customer')
-    builder.set_from(email: nil, description: nil, active_card: nil)
-    builder.set_from(params, :email, :description)
+      .set_from(email: nil, description: nil, active_card: nil)
+      .set_from(params, :email, :description)
     card = params['card']
     case card
     when Hash
@@ -25,8 +25,8 @@ module WebPayMock
   def charge_from(params, overrides = {})
     params = stringify_keys(params)
     builder = ResponseObjectBuilder.new('charge')
-    builder.set_from(amount_refunded: 0, paid: true, refunded: false, failure_message: nil, captured: true, expire_time: nil)
-    builder.set_from(params, :amount, :currency, :description)
+      .set_from(amount_refunded: 0, paid: true, refunded: false, failure_message: nil, captured: true, expire_time: nil)
+      .set_from(params, :amount, :currency, :description)
     card = params['card']
     case card
     when Hash

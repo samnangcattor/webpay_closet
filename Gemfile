@@ -44,18 +44,18 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-group :development do
-  gem 'pry'
-end
 
 group :production do
   gem 'pg'
 end
 
-group :development, :test do
+group :development do
+  gem 'pry'
   gem 'sqlite3'
-  gem 'rspec-rails', '~> 2.14.0'
-  gem "fabrication", "~> 2.9.3"
-  gem 'faker', '~> 1.2.0'
-  gem 'webmock', '~> 1.16.1'
+  group  :test do
+    gem 'rspec-rails', '~> 2.14.0'
+    gem "fabrication", "~> 2.9.3"
+    gem 'faker', '~> 1.2.0'
+    gem 'webmock', '~> 1.16.1'
+  end
 end

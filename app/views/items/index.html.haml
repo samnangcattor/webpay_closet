@@ -5,6 +5,7 @@
     %th アイテム名
     %th 価格(GIL)
     %th
+    %th
   - @items.each do |item|
     %tr
       %td= item.name
@@ -14,3 +15,8 @@
           = link_to '購入', buy_item_path(item), method: :post, confirm: "#{item.name}を購入しますか", class: 'btn btn-xs btn-success btn-block'
         - else
           = link_to '登録せず購入', payment_item_path(item), class: 'btn btn-xs btn-default btn-block'
+      %td
+        - if current_customer
+          = link_to '定期購入', buy_recursively_item_path(item), method: :post, confirm: "#{item.name}を定期購入しますか", class: 'btn btn-xs btn-success btn-block'
+        - else
+          定期購入をするにはログインして下さい。

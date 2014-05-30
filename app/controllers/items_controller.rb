@@ -23,7 +23,20 @@ class ItemsController < ApplicationController
       item.bought_by_guest(params['webpay-token'], params[:address], params[:name])
     end
     redirect_to items_path, notice: "#{item.name}を購入しました"
-  rescue Item::ChargeFailed => e
+  rescue Item::TransactionFailed => e
+    redirect_to items_path, notice: "支払いできませんでした (#{e.message})"
+  end
+
+  # POST /items/:id/buy_recursively
+  def buy_recursively
+    item = Item.find(params[:id])
+    begin
+      item.bought_recursively(current_customer)
+    rescue Customer::NoWebPayAccountError
+      return redirect_to edit_customer_registration_path, notice: 'カード情報が未登録です'
+    end
+    redirect_to items_path, notice: "#{item.name}を購入しました"
+  rescue Item::TransactionFailed => e
     redirect_to items_path, notice: "支払いできませんでした (#{e.message})"
   end
 end

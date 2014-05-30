@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140530064201) do
+ActiveRecord::Schema.define(version: 20140530110720) do
 
   create_table "customers", force: true do |t|
     t.string   "email",              default: "",    null: false
@@ -49,9 +49,10 @@ ActiveRecord::Schema.define(version: 20140530064201) do
   create_table "sales", force: true do |t|
     t.integer  "customer_id"
     t.integer  "item_id"
-    t.string   "webpay_charge_id", null: false
+    t.string   "webpay_charge_id",    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "webpay_recursion_id"
   end
 
   add_index "sales", ["customer_id"], name: "index_sales_on_customer_id"

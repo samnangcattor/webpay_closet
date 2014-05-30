@@ -40,8 +40,18 @@ module WebPayMock
     end
     if params['capture'] == false
       builder[:captured] = builder[:paid] = false
-      builder[:expire_time] = Time.now.to_i + 60 * 60 * 24 * 7
+      builder[:expire_time] = 7.days.since.to_i
     end
+    builder.set_from(overrides).build
+  end
+
+  def recursion_from(params, overrides = {})
+    params = stringify_keys(params)
+    builder = ResponseObjectBuilder.new('recursion')
+      .set_from(params, :amount, :currency, :period, :customer)
+    builder[:last_executed] = Time.now.to_i
+    builder[:next_scheduled] = 1.month.since.to_i
+    builder[:status] = 'active'
     builder.set_from(overrides).build
   end
 
@@ -88,6 +98,7 @@ module WebPayMock
       charge: 'ch',
       customer: 'cus',
       token: 'tok',
+      recursion: 'rec',
       event: 'evt',
       account: 'acct'
     }.freeze

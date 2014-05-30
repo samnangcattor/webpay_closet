@@ -7,6 +7,8 @@ API 通信をともなう重要な部分はモックを利用した単体・結�
 
 == 利用方法
 
+=== アプリの立ち上げ
+
 * https://webpay.jp でご自分のアカウントを取得し、 https://webpay.jp/settings に記載されているテスト環境用の API キーを環境変数に設定してください。
 
     export WEBPAY_PUBLIC_KEY=test_public_XXXXXXXXXXXXXXXXXXXXXXXX
@@ -21,11 +23,21 @@ API 通信をともなう重要な部分はモックを利用した単体・結�
 
 * http://localhost:3000 にアクセスします。
 
-* http://localhost:3000/customers/sign_up からユーザ登録をします
+=== ユーザー登録と買い物
 
-* 登録が済むとトップページにリダイレクトされるので、買い物をします
+* http://localhost:3000/customers/sign_up からユーザ登録をします。
+
+* 登録が済むとトップページにリダイレクトされるので、買い物をします。
 
 * 買い物の履歴は http://localhost:3000/sales で確認できます。
+
+===  定期課金とwebhook
+
+* ログインした状態で http://localhost:3000 にアクセスし、定期課金を作成する事が出来ます。
+
+* 作成した定期課金は http://localhost:3000/recursions で確認できます。
+
+* https://webpay.jp/settings 下部より、フック先のURLを http://localhost:3000/webhook に設定したWebhookを設定しておくと、定期課金によって行われた課金が発生した時にそのitemの買い物履歴を作成します。
 
 == Heroku でのデプロイ
 

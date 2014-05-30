@@ -1,0 +1,17 @@
+%h1 定期課金の履歴
+%table.table.table-striped
+  %tr
+    %th アイテム
+    %th 金額
+    %th 日時
+    %th 次回課金
+    %th charge ID (admin 用)
+    %th
+  - @recursions.each do |recursion|
+    %tr
+      %td= recursion.item.name
+      %td= recursion.item.price
+      %td= l(recursion.created_at, format: :short)
+      %td= l(recursion.next_scheduled, format: :short)
+      %td= recursion.webpay_recursion_id
+      %td= link_to '課金停止', recursion, method: :delete, data: { confirm: '本当にこの定期課金を停止しても宜しいですか？' }

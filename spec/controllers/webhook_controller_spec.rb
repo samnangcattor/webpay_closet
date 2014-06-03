@@ -24,6 +24,7 @@ describe WebhookController do
         end
 
         it 'should be success and a sale is created' do
+          expect(response).to be_ok
           expect { post('index', params) }.to change(Sale, :count).by(1)
         end
       end
@@ -34,6 +35,7 @@ describe WebhookController do
         end
 
         it 'should be success and no sale is created' do
+          expect(response).to be_ok
           expect { post('index', params) }.to change(Sale, :count).by(0)
         end
       end
@@ -45,6 +47,7 @@ describe WebhookController do
       end
 
       it 'should be success and no sale is created' do
+        expect(response).to be_ok
         expect { post('index', params) }.to change(Sale, :count).by(0)
       end
     end

@@ -4,7 +4,7 @@ describe WebhookController do
   describe '#index' do
     let(:customer) { Fabricate(:customer, webpay_customer_id: 'cus_XXXXXXXXX') }
     let(:item) { Fabricate(:item) }
-    let(:recursion) { Fabricate(:recursion, id: 'rec_XXXXXXXXX', customer_id: customer.id, item_id: item.id) }
+    let(:recursion) { Fabricate(:recursion, webpay_recursion_id: 'rec_XXXXXXXXX', customer_id: customer.id, item_id: item.id) }
 
     context 'params[:type] is charge.succeeded' do
       let(:params) do
@@ -20,8 +20,7 @@ describe WebhookController do
 
       context 'params[:data][:object] has recursion key' do
         before(:each) do
-          params[:data][:object][:recursion] = 'rec_XXXXXXXXX'
-          Recursion.stub(:find_by).with({webpay_recursion_id: "rec_XXXXXXXXX"}).and_return(recursion)
+          params[:data][:object][:recursion] = recursion.webpay_recursion_id
         end
 
         it 'should be success and a sale is created' do

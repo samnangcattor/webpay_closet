@@ -26,7 +26,7 @@
               %li.navbar-text= current_customer.name + 'さん、こんにちは'
               %li= link_to 'アイテム一覧', root_path
               %li= link_to 'ご購入履歴', sales_path
-              %li= link_to '定期課金', recursions_path
+              %li= link_to '定期購入', recursions_path
               %li= link_to 'アカウント設定', edit_customer_registration_path
               %li= link_to 'ログアウト', destroy_customer_session_path, method: :delete
             - else

@@ -1,4 +1,4 @@
-%h1 定期課金の履歴
+%h1 定期購入の一覧
 %table.table.table-striped
   %tr
     %th アイテム
@@ -14,4 +14,4 @@
       %td= l(recursion.created_at, format: :short)
       %td= l(recursion.next_scheduled, format: :short)
       %td= recursion.webpay_recursion_id
-      %td= link_to '課金停止', recursion, method: :delete, data: { confirm: '本当にこの定期課金を停止してもよろしいですか？' }
+      %td= link_to '課金停止', recursion, method: :delete, data: { confirm: '本当にこの定期購入を停止してもよろしいですか？' }

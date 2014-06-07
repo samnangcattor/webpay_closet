@@ -5,7 +5,7 @@
     %th 金額
     %th 日時
     %th charge ID (admin 用)
-    %th recursion ID (定期課金の場合のみ)
+    %th recursion ID (定期購入の場合のみ)
   - @sales.each do |sale|
     %tr
       %td= sale.item.name

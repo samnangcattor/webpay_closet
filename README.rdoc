@@ -31,9 +31,9 @@ API 通信をともなう重要な部分はモックを利用した単体・結�
 
 * 買い物の履歴は http://localhost:3000/sales で確認できます。
 
-===  定期課金とwebhook
+===  定期購入とwebhook
 
-* ログインした状態で http://localhost:3000 にアクセスし、定期課金を作成する事が出来ます。
+* ログインした状態で http://localhost:3000 にアクセスすると定期購入が選べます。
 
 * 作成した定期課金は http://localhost:3000/recursions で確認できます。
 

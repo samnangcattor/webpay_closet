@@ -7,7 +7,7 @@ class Customers::RegistrationsController < Devise::RegistrationsController
         customer.update_webpay_customer_id
         notice = [:signed_up]
         location = after_sign_up_path_for(customer)
-      rescue => e
+      rescue WebPay::ApiError => e
         notice = ['signed_up_but_webpay_error', message: e.data.error.message]
         location = edit_customer_registration_path
       end

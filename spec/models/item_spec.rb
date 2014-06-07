@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 describe Item do
   let(:customer) { Fabricate(:customer, webpay_customer_id: 'cus_XXXXXXXXX') }
   let(:item) { Fabricate(:item) }

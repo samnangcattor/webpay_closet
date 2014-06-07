@@ -44,7 +44,7 @@ group :development do
 end
 
 group  :test do
-  gem 'rspec-rails', '~> 2.14.0'
+  gem 'rspec-rails', '~> 3.0.0'
   gem "fabrication", "~> 2.9.3"
   gem 'faker', '~> 1.2.0'
   gem 'webmock', '~> 1.16.1'

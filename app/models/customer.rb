@@ -1,6 +1,7 @@
 class Customer < ActiveRecord::Base
   class NoWebPayAccountError < RuntimeError
   end
+  include WebPayClient
 
   devise :database_authenticatable, :registerable, :validatable
 
@@ -10,13 +11,13 @@ class Customer < ActiveRecord::Base
     return if self.webpay_customer_id.nil? && webpay_token.blank?
 
     if self.webpay_customer_id
-      retrieved = WebPay::Customer.retrieve(self.webpay_customer_id)
-      retrieved.card = self.webpay_token if webpay_token.present?
-      retrieved.email = self.email
-      retrieved.description = self.name
-      retrieved.save
+      req = { id: self.webpay_customer_id }
+      req[:card] = self.webpay_token if webpay_token.present?
+      req[:email] = self.email if self.email
+      req[:description] = self.name if self.name
+      webpay.customer.update(req)
     else
-      created = WebPay::Customer.create(card: webpay_token, email: self.email, description: self.name)
+      created = webpay.customer.create(card: webpay_token, email: self.email, description: self.name)
       update_attributes(webpay_customer_id: created.id)
     end
   end

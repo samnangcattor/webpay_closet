@@ -90,6 +90,7 @@ describe Customers::RegistrationsController do
 
       def stub_retrieve
         stub_request(:get, 'https://api.webpay.jp/v1/customers/' + original_id)
+          .with(query: hash_including({}))
           .to_return(body: customer_from({}, id: original_id).to_json)
       end
 

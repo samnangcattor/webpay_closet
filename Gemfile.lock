@@ -153,8 +153,8 @@ GEM
     webmock (1.16.1)
       addressable (>= 2.2.7)
       crack (>= 0.3.2)
-    webpay (2.4.1)
-      faraday (~> 0.8)
+    webpay (3.0.1)
+      faraday (~> 0.9)
 
 PLATFORMS
   ruby

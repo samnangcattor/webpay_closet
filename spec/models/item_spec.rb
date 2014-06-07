@@ -44,7 +44,7 @@ describe Item do
       end
 
       it 'should raise TransactionFailed error' do
-        expect { item.bought_by_customer(customer) }.to raise_error(Item::TransactionFailed, "This card cannot be used.")
+        expect { item.bought_by_customer(customer) }.to raise_error(Item::TransactionFailed, "CardError: This card cannot be used.")
       end
     end
   end
@@ -83,7 +83,7 @@ describe Item do
       end
 
       it 'should raise TransactionFailed error' do
-        expect { item.bought_recursively(customer) }.to raise_error(Item::TransactionFailed, "This card cannot be used.")
+        expect { item.bought_recursively(customer) }.to raise_error(Item::TransactionFailed, "CardError: This card cannot be used.")
       end
     end
   end

@@ -48,4 +48,5 @@ group  :test do
   gem "fabrication", "~> 2.9.3"
   gem 'faker', '~> 1.2.0'
   gem 'webmock', '~> 1.16.1'
+  gem 'webpay-mock', path: '../webpay-mock'
 end

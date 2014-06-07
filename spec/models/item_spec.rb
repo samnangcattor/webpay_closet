@@ -14,13 +14,7 @@ describe Item do
     end
 
     context 'when the transaction succeeds' do
-      let(:dummy_charge) { charge_from(expected_params) }
-
-      before do
-        stub_request(:post, 'https://api.webpay.jp/v1/charges')
-          .with(expected_params)
-          .to_return(body: dummy_charge.to_json)
-      end
+      let!(:stub_response) { webpay_stub(:charges, :create, params: expected_params) }
 
       it 'should create a sale' do
         expect { item.bought_by_customer(customer) }.to change(Sale, :count).by(1)
@@ -28,16 +22,12 @@ describe Item do
 
       it 'should set sale.webpay_charge_id' do
         item.bought_by_customer(customer)
-        expect(Sale.last.webpay_charge_id).to eq dummy_charge['id']
+        expect(Sale.last.webpay_charge_id).to eq stub_response['id']
       end
     end
 
     context 'when the transaction fails' do
-      before do
-        stub_request(:post, 'https://api.webpay.jp/v1/charges')
-          .with(expected_params)
-          .to_return(card_error)
-      end
+      before { webpay_stub(:charges, :create, params: expected_params, error: :card_error) }
 
       it 'should not create a sale' do
         expect { item.bought_by_customer(customer) rescue nil }.not_to change(Sale, :count)
@@ -53,13 +43,7 @@ describe Item do
     let(:expected_params) { { customer: customer.webpay_customer_id, amount: item.price, currency: 'jpy', period: "month" } }
 
     context 'when the transaction succeeds' do
-      let(:dummy_charge) { recursion_from(expected_params) }
-
-      before do
-        stub_request(:post, 'https://api.webpay.jp/v1/recursions')
-          .with(expected_params)
-          .to_return(body: dummy_charge.to_json)
-      end
+      let!(:stub_response) { webpay_stub(:recursion, :create, params: expected_params) }
 
       it 'should create a recursion' do
         expect { item.bought_recursively(customer) }.to change(Recursion, :count).by(1)
@@ -67,16 +51,12 @@ describe Item do
 
       it 'should set sale.webpay_recursion_id' do
         item.bought_recursively(customer)
-        expect(Recursion.last.webpay_recursion_id).to eq dummy_charge['id']
+        expect(Recursion.last.webpay_recursion_id).to eq stub_response['id']
       end
     end
 
     context 'when the transaction fails' do
-      before do
-        stub_request(:post, 'https://api.webpay.jp/v1/recursions')
-          .with(expected_params)
-          .to_return(card_error)
-      end
+      before { webpay_stub(:recursion, :create, params: expected_params, error: :card_error) }
 
       it 'should not create a recursion' do
         expect { item.bought_recursively(customer) rescue nil }.not_to change(Recursion, :count)

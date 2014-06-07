@@ -9,13 +9,11 @@ describe ItemsController do
       let(:id) { 'cus_XXXXXXXXX' }
       let(:customer) { Fabricate(:customer, webpay_customer_id: id) }
       def stub(attributes = {})
-        stub_request(:get, 'https://api.webpay.jp/v1/customers/' + id)
-          .with(query: hash_including({}))
-          .to_return(body: customer_from({}, attributes.merge(id: id)).to_json)
+        webpay_stub(:customers, :retrieve, params: { id: id }, overrides: attributes)
       end
 
       it 'should be true if customer has card' do
-        stub(active_card: dummy_card)
+        stub(active_card: fake_card)
         sign_in customer
         get :index
         expect(assigns(:has_card)).to eq true
@@ -43,9 +41,7 @@ describe ItemsController do
 
       it 'should buy the item with customer id' do
         params = { customer: customer.webpay_customer_id, amount: item.price, currency: 'jpy' }
-        stub_request(:post, 'https://api.webpay.jp/v1/charges')
-          .with(params)
-          .to_return(body: charge_from(params).to_json)
+        webpay_stub(:charges, :create, params: params)
         expect { post :buy, id: item.id }.to change(Sale, :count).by(1)
       end
     end
@@ -54,9 +50,7 @@ describe ItemsController do
       let(:token) { 'tok_XXXXXXXXX' }
       it 'should by the item with the token in request' do
         params = { card: token, amount: item.price, currency: 'jpy', description: 'Tokyo-to Chiyoda-ku John Doe' }
-        stub_request(:post, 'https://api.webpay.jp/v1/charges')
-          .with(params)
-          .to_return(body: charge_from(params).to_json)
+        webpay_stub(:charges, :create, params: params)
         expect { post :buy, id: item.id, address: 'Tokyo-to Chiyoda-ku',  name: 'John Doe', 'webpay-token' => token }.
           not_to change(Sale, :count)
       end

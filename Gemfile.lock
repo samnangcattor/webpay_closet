@@ -1,3 +1,9 @@
+PATH
+  remote: ../webpay-mock
+  specs:
+    webpay-mock (0.1.0)
+      webmock (~> 1.13)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -185,3 +191,4 @@ DEPENDENCIES
   uglifier (>= 1.3.0)
   webmock (~> 1.16.1)
   webpay
+  webpay-mock!

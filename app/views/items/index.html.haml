@@ -1,5 +1,11 @@
 %p.lead アイテム購入のサンプルです。
 %p 会員登録をしているとワンクリックで購入、していない場合はクレジットカード番号と配達先を入力する画面に遷移します。
+%p 定期購入機能を利用するには会員登録をおこない、カード情報を登録する必要があります。
+- if current_customer && !@has_card
+  %p
+    カード情報が未登録です。
+    = link_to 'カード情報を登録', edit_customer_registration_path
+    してからご利用ください。
 %table.table.table-striped
   %tr
     %th アイテム名
@@ -11,12 +17,12 @@
       %td= item.name
       %td= item.price
       %td
-        - if current_customer
+        - if current_customer && @has_card
           = link_to '購入', buy_item_path(item), method: :post, data: { confirm: "#{item.name}を購入しますか" }, class: 'btn btn-xs btn-success btn-block'
         - else
-          = link_to '登録せず購入', payment_item_path(item), class: 'btn btn-xs btn-default btn-block'
+          = link_to 'カード情報を記入して購入', payment_item_path(item), class: 'btn btn-xs btn-default btn-block'
       %td
-        - if current_customer
-          = link_to '定期購入', buy_recursively_item_path(item), method: :post, data: { confirm: "#{item.name}を定期購入しますか" }, class: 'btn btn-xs btn-info btn-block'
+        - if current_customer && @has_card
+          = link_to '定期購入', buy_recursively_item_path(item), method: :post, data: { confirm: "#{item.name}を定期購入しますか" }, class: 'btn btn-xs btn-success btn-block'
         - else
           = link_to '定期購入', new_customer_session_path, data: { confirm: "定期購入をするにはログインしてカード情報を登録して下さい。" }, class: 'btn btn-xs btn-info btn-block'

@@ -22,6 +22,10 @@ class Customer < ActiveRecord::Base
     end
   end
 
+  def webpay_customer
+    @webpay_customer ||= webpay.customer.retrieve(webpay_customer_id) if webpay_customer_id
+  end
+
   def webpay_customer_id_or_raise
     self.webpay_customer_id.presence or raise NoWebPayAccountError.new
   end

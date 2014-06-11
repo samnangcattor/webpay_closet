@@ -5,9 +5,11 @@
     %th 金額
     %th 日時
     %th charge ID (admin 用)
+    %th recursion ID (定期購入の場合のみ)
   - @sales.each do |sale|
     %tr
       %td= sale.item.name
       %td= sale.item.price
       %td= l(sale.created_at, format: :short)
       %td= sale.webpay_charge_id
+      %td= sale.webpay_recursion_id

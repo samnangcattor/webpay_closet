@@ -1,14 +1,20 @@
 WebpayCloset::Application.routes.draw do
   devise_for :customers, controllers: { registrations: 'customers/registrations' }
 
-  resources :items, only: [:index] do
-    get 'payment', on: :member
-    post 'buy', on: :member
-  end
-
   root 'items#index'
 
+  resources :items, only: [:index] do
+    member do
+      get :payment
+      post :buy, :buy_recursively
+    end
+  end
+
   resources :sales, only: [:index]
+
+  resources :recursions, only: [:index, :destroy]
+
+  post 'webhook/' => 'webhook#index'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

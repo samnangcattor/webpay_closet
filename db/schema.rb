@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131122160317) do
+ActiveRecord::Schema.define(version: 20140530110720) do
 
   create_table "customers", force: true do |t|
     t.string   "email",              default: "",    null: false
@@ -34,12 +34,25 @@ ActiveRecord::Schema.define(version: 20131122160317) do
     t.datetime "updated_at"
   end
 
+  create_table "recursions", force: true do |t|
+    t.integer  "customer_id"
+    t.integer  "item_id"
+    t.string   "webpay_recursion_id"
+    t.string   "period"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "recursions", ["customer_id"], name: "index_recursions_on_customer_id"
+  add_index "recursions", ["item_id"], name: "index_recursions_on_item_id"
+
   create_table "sales", force: true do |t|
     t.integer  "customer_id"
     t.integer  "item_id"
-    t.string   "webpay_charge_id", null: false
+    t.string   "webpay_charge_id",    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "webpay_recursion_id"
   end
 
   add_index "sales", ["customer_id"], name: "index_sales_on_customer_id"

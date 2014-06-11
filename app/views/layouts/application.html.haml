@@ -26,6 +26,7 @@
               %li.navbar-text= current_customer.name + 'さん、こんにちは'
               %li= link_to 'アイテム一覧', root_path
               %li= link_to 'ご購入履歴', sales_path
+              %li= link_to '定期購入', recursions_path
               %li= link_to 'アカウント設定', edit_customer_registration_path
               %li= link_to 'ログアウト', destroy_customer_session_path, method: :delete
             - else
@@ -34,5 +35,5 @@
       - if flash[:notice]
         .alert.alert-info= flash[:notice]
       .row
-        .col-sm-6.col-sm-offset-3
+        .col-sm-8.col-sm-offset-2
           = yield

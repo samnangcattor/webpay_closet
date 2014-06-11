@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.1'
+gem 'rails-i18n', '~> 4.0.0' # For 4.0.x
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
@@ -33,18 +34,6 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-# Use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.1.2'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Use Capistrano for deployment
-# gem 'capistrano', group: :development
-
-# Use debugger
-# gem 'debugger', group: [:development, :test]
-
 group :production do
   gem 'pg'
 end
@@ -55,8 +44,9 @@ group :development do
 end
 
 group  :test do
-  gem 'rspec-rails', '~> 2.14.0'
+  gem 'rspec-rails', '~> 3.0.0'
   gem "fabrication", "~> 2.9.3"
   gem 'faker', '~> 1.2.0'
-  gem 'webmock', '~> 1.16.1'
+  gem 'webmock'
+  gem 'webpay-mock'
 end

@@ -1,4 +1,5 @@
 class WebhookController < ApplicationController
+  protect_from_forgery except: :index
   def index
     if params[:type] == 'charge.succeeded' &&
         recursion = Recursion.find_by(webpay_recursion_id: params[:data][:object][:recursion])

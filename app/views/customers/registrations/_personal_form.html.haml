@@ -6,4 +6,4 @@
   = f.text_field :address, class: 'form-control'
 %div.form-group
   = f.label 'webpay_token', 'クレジットカード情報' + (resource.webpay_customer_id ? '(登録済)' : '')
-  %script{'src' => 'https://checkout.webpay.jp/v1/', 'class' => 'webpay-button', 'data-key' => Rails.application.config.webpay_public_key, 'data-partial' => 'true', 'data-token-name' => 'customer[webpay_token]', 'data-previous-token' => resource.webpay_token || ''}
+  %script{src: 'https://checkout.webpay.jp/v2/', class: 'webpay-button', data: { key: Rails.application.config.webpay_public_key, partial: 'true', :'token-name' => 'customer[webpay_token]', :'previous-token' => resource.webpay_token || '', lang: 'ja'}}

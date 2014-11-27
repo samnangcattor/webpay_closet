@@ -159,7 +159,7 @@ GEM
     webmock (1.18.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
-    webpay (3.0.1)
+    webpay (3.2.1)
       faraday (~> 0.9)
     webpay-mock (0.1.1)
       webmock (~> 1.18.0)

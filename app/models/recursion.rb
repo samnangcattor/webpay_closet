@@ -15,7 +15,7 @@ class Recursion < ActiveRecord::Base
   end
 
   def destroy
-    webpay_recursion.delete
+    webpay.recursion.delete(id: webpay_recursion.id)
     super
   end
 end

@@ -11,4 +11,4 @@
     %br
     = text_field_tag 'name', '', class: 'form-control'
   .form-group
-    %script{src: 'https://checkout.webpay.jp/v2', class: 'webpay-button', data: { key: Rails.application.config.webpay_public_key, partial: 'true', lang: 'ja', text: 'カード情報を入力して購入'}}
+    %script{src: 'https://checkout.webpay.jp/v2', class: 'webpay-button', data: { key: Rails.application.config.webpay_public_key, partial: 'false', lang: 'ja', text: 'カード情報を入力して購入'}}
